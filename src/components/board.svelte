@@ -1,5 +1,15 @@
 <script lang="ts">
-    let cells = [...Array(100)].map((v, i) => i);
+import { getMultipleRandom, randomNumbers } from "../utils";
+    const size = 100;
+
+    let nopes = randomNumbers(10, size - 1);
+
+    let cells = [...Array(size)].map((v, i) => {
+        if (nopes.includes(i)) {
+            return '😮'
+        }
+        return i;
+    });
 </script>
 
 <main>
