@@ -44,7 +44,7 @@
     if (cells[y][x].status === 'uncovered') {
       return;
     }
-    if (cells[y][x].value === -1 && first) {
+    if (cells[y][x].value === -1) {
       gameover = true;
       cells[y][x].status = 'uncovered';
       return;
