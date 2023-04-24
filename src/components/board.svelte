@@ -4,19 +4,24 @@
   const size = 10;
   const nopesCt = 10;
 
+  type Cell = {
+    value: number;
+    status: 'covered' | 'uncovered';
+  };
+
   let nopes = randomNumbers(nopesCt, size * size - 1);
 
-  let cells = [];
+  let cells: Cell[][] = [];
   for (let y = 0; y < size; y++) {
     cells.push([]);
     for (let x = 0; x < size; x++) {
-      cells[y].push(0);
+      cells[y].push({ value: 0, status: 'covered' });
     }
   }
 
   nopes.forEach((index) => {
     const [x, y] = [index % size, Math.floor(index / size)];
-    cells[y][x] = -1;
+    cells[y][x] = { value: -1, status: 'covered' };
     for (let y1 = y - 1; y1 <= y + 1; y1++) {
       if (y1 < 0 || y1 >= size) {
         continue;
@@ -25,16 +30,20 @@
         if (x1 < 0 || x1 >= size || nopes.includes(y1 * size + x1)) {
           continue;
         }
-        cells[y1][x1]++;
+        cells[y1][x1].value++;
       }
     }
   });
+
+  function uncover(y: number, x: number) {
+    cells[y][x].status = 'uncovered';
+  }
 </script>
 
 <main>
-  {#each cells as row}
-    {#each row as cell}
-      <Cell value={cell} />
+  {#each cells as row, y}
+    {#each row as cell, x}
+      <Cell {...cell} on:uncover={() => uncover(y, x)} />
     {/each}
   {/each}
 </main>
