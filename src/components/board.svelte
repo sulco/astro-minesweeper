@@ -9,6 +9,8 @@
     status: 'covered' | 'uncovered';
   };
 
+  let gameover = false;
+
   let nopes = randomNumbers(nopesCt, size * size - 1);
 
   let cells: Cell[][] = [];
@@ -35,23 +37,48 @@
     }
   });
 
-  function uncover(y: number, x: number) {
-    cells[y][x].status = 'uncovered';
+  function uncover(y: number, x: number, first = false) {
+    if (x >= size || x < 0 || y >= size || y < 0) {
+      return;
+    }
+    if (cells[y][x].status === 'uncovered') {
+      return;
+    }
+    if (cells[y][x].value === -1 && first) {
+      gameover = true;
+      return;
+    }
+    if (cells[y][x].value > 0 && first) {
+      cells[y][x].status = 'uncovered';
+      return;
+    }
+    if (cells[y][x].value === 0) {
+      cells[y][x].status = 'uncovered';
+      setTimeout(() => {
+        uncover(y - 1, x);
+        uncover(y + 1, x);
+        uncover(y, x - 1);
+        uncover(y, x + 1);
+      }, 100);
+    }
   }
 </script>
 
-<main>
+<main class:gameover>
   {#each cells as row, y}
     {#each row as cell, x}
-      <Cell {...cell} on:uncover={() => uncover(y, x)} />
+      <Cell {...cell} on:uncover={() => uncover(y, x, true)} />
     {/each}
   {/each}
 </main>
 
 <style>
   main {
-    display: grid;
+    display: inline-grid;
     --size: 40px;
     grid-template: repeat(10, var(--size)) / repeat(10, var(--size));
+  }
+  .gameover {
+    background: #e55;
   }
 </style>

@@ -12,7 +12,7 @@
 
 <button class="cell {status}" on:click={uncover}>
   {#if value === -1}
-    😮
+    😵
   {:else if value > 0}
     {value}
   {/if}
