@@ -46,9 +46,10 @@
     }
     if (cells[y][x].value === -1 && first) {
       gameover = true;
+      cells[y][x].status = 'uncovered';
       return;
     }
-    if (cells[y][x].value > 0 && first) {
+    if (cells[y][x].value > 0) {
       cells[y][x].status = 'uncovered';
       return;
     }
