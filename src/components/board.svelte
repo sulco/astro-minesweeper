@@ -6,7 +6,7 @@
 
   type Cell = {
     value: number;
-    status: 'covered' | 'uncovered';
+    status: 'covered' | 'uncovered' | 'flagged';
   };
 
   let gameover = false;
@@ -59,15 +59,23 @@
         uncover(y + 1, x);
         uncover(y, x - 1);
         uncover(y, x + 1);
-      }, 100);
+      }, 50);
     }
+  }
+
+  function flag(y: number, x: number) {
+    cells[y][x].status = 'flagged';
   }
 </script>
 
 <main class:gameover>
   {#each cells as row, y}
     {#each row as cell, x}
-      <Cell {...cell} on:uncover={() => uncover(y, x, true)} />
+      <Cell
+        {...cell}
+        on:uncover={() => uncover(y, x, true)}
+        on:flag={() => flag(y, x)}
+      />
     {/each}
   {/each}
 </main>
@@ -77,8 +85,9 @@
     display: inline-grid;
     --size: 40px;
     grid-template: repeat(10, var(--size)) / repeat(10, var(--size));
+    border: solid 3px #ccc;
   }
   .gameover {
-    background: #e55;
+    border-color: #e55;
   }
 </style>
